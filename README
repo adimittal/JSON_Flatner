@@ -1,17 +1,20 @@
 FILES:
+Start.php can be called from the browser to process all the json files given in the array at the top of Start.php - 
+it will produce convenient links for viewing the produced json files from output folder as well 
+
 /src contains the source
-/tests contain the tests
+/tests contain the unit tests
 /data contains the input json file(s) to be processed
+/desiredOutput is for tests to compare the output files to
 /output contains the resulting json files - note that the output folder must have proper write permissions
 
 Flattner.php is a class created to flatten the JSON; it first validates the JSON input
 
 DEVELOPMENT:
+Completed: Parsing and flattening the given json files
+Todo: reconstruction from the created json files
 
-Work in progress
-
-
-
+Nesting level is not limited to 5, it is limited by memory allocated to PHP and max decode depth as configured in PHP (usually 512)
 
 TESTING:
 For testing PHPUnit has been used https://phpunit.de/getting-started/phpunit-7.html
@@ -24,10 +27,10 @@ My code does not correct or ignore invalid lines of JSON, it throws an exception
 I run my unit tests from command line in the root folder as follows:
 $ ./vendor/bin/phpunit --bootstrap vendor/autoload.php tests/FlattnerTest  (or just tests to run whole test folder)
 
+accounts.json and restaurants.json were used for testing; the stack I created is also tested with multiple push/pop operations in mixed order
 
 
-
-
+--------
 
 Problem
 Given a deeply nested JSON object, write code to flatten out the JSON and split it up into

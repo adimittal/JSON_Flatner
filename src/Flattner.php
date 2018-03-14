@@ -62,7 +62,7 @@ class Flattner {
      * Init the top level json object
      */
     public function setTopLevel() {
-        if (is_object($this->decoded) || $this->is_array_of_objects($this->decoded)) {
+        if (is_object($this->decoded) || is_array($this->decoded)) {
             foreach ($this->decoded as $k => $v) {
                 $this->topLevelObject = $k;
             }
@@ -73,8 +73,28 @@ class Flattner {
         return $this->topLevelObject;
     }
 
+    /**
+     * If you wish to use a dir other than default
+     * @param type $outputDir
+     */
+    public function setOutputDir($outputDir) {
+        $this->outputDir = $outputDir;
+    }
+
+    /**
+     * Get the flat array and output to files
+     */
+    public function outputFiles() {
+        $flat = $this->flatten();
+        foreach ($flat as $k => $v) {
+            file_put_contents($this->outputDir . "/$k.json", json_encode($v));
+        }
+    }
+
     /*
-     * Flatten a json object
+     * Flatten the main json object and work through the stack of nested objects
+     * Add in the id and __index as necessary
+     * @return - an array with filename as the index and the object to print to the files
      */
 
     public function flatten() {
@@ -91,15 +111,22 @@ class Flattner {
             $filename = $fileobj[0];
             $k = $fileobj[1];
             $topObject = $fileobj[2];
-
-            if ($this->is_array_of_objects($topObject) || is_object($topObject)) {
+            $extras = $fileobj[3];
+            if (is_array($topObject) || is_object($topObject)) {
+                $index = 0;
                 foreach ($topObject as $k => $v) {
-                    if (is_object($v)) {
-                        $flat[$filename]['id'] = $id; //add the id as the top level id
-                        $flat[$filename][] = $this->flattenObject($v, $filename);
+                    if (is_object($v) || is_array($v)) {
+                        $extras = ['id' => $id, '__index' => $index];
+                        $flat[$filename][] = $this->flattenObject($v, $filename, $extras);
+                        $index += 1;
                     } else {
-                        $flat[$filename]['id'] = $id; //add the id as the top level id
-                        $flat[$filename][$k] = $v;
+                        if (isset($extras['id']) && isset($extras['__index'])) {
+                            $id = $extras['id'];
+                            $index = $extras['__index'];
+                        }
+                        $flat[$filename][$index]['id'] = $id; //add the id as the top level id
+                        $flat[$filename][$index]['__index'] = $index;
+                        $flat[$filename][$index][$k] = $v;
                     }
                 }
             }
@@ -110,25 +137,25 @@ class Flattner {
 
     /**
      * Loop the object
-      If an array is found, it has objects, flatten them all and save
-      If an object is found, it has keys, filter them, push objects or arrays to stack
-     * Go through the entire stack
+     * If an array is found, it has objects, flatten them all and save
+     * If an object is found, it has keys, filter them, push objects or arrays to stack
      * @param type $object
      * @param prefix - name of the higher level object if an array or object is pushed to stack
+     * @param $extras - for adding on the id and __index
      * @return type
      */
-    private function flattenObject($object, $prefix) {
+    private function flattenObject($object, $prefix, $extras = []) {
         $flat = [];
+        foreach ($extras as $k => $v) {
+            $flat[$k] = $v;
+        }
         foreach ($object as $k => $v) {
             //If its not an object or array its a flat property to write
             //Else it is an object or array to push to the stack
-            if (!(is_object($v) || $this->is_array_of_objects($v))) {
+            if (!(is_object($v) || is_array($v))) {
                 $flat[$k] = $v;
-            } else if (is_object($v)) {
-                $fileObj = $this->createFileObj($k, $v, $prefix);
-                $this->stackPush($fileObj);
-            } else if ($this->is_array_of_objects($v)) {
-                $fileObj = $this->createFileObj($k, $v, $prefix);
+            } else if (is_object($v) || is_array($v)) {
+                $fileObj = $this->createFileObj($k, $v, $prefix, $extras);
                 $this->stackPush($fileObj);
             }
         }
@@ -178,12 +205,13 @@ class Flattner {
      * @param type $val
      */
     public function stackPop() {
-        if (!empty($this->stack)) {
+        if (!empty($this->stack) && $this->stackCount > 0) {
+            end($this->stack);
+            $lastKey = key($this->stack);
+            $pop = $this->stack[$lastKey];
+            unset($this->stack[$lastKey]);
             $this->stackCount -= 1;
-            if ($this->stackCount < 0) {
-                throw new \Exception('Trying to pop an empty stack - is there a bug?');
-            }
-            return $this->stack[$this->stackCount];
+            return $pop;
         } else {
             return null;
         }
@@ -195,25 +223,19 @@ class Flattner {
      * @param type $prefix
      * @return type
      */
-    private function createFileObj($k, $v, $prefix = '') {
+    private function createFileObj($k, $v, $prefix = '', $extras = []) {
         $delim = !empty($prefix) ? "_" : '';
         $filename = $prefix . $delim . $this->inflector->singularize($k); //We create the new filename for the object as the outerobjects_object and the object name is in singular
         $object = $v;
-        return $fileobj = [$filename, $k, $object]; //We'll push this to stack so we have both the actual objectname and the filename
+        return $fileobj = [$filename, $k, $object, $extras]; //We'll push this to stack so we have both the actual objectname and the filename
     }
 
     /**
-     * There was a problem with decoded address coords as the decoder thinks that is an array not a string
-     * So, instead of checking is_array we'll need to check its an array of stdClass objects
-     * @param type $r
+     * Just to help during debugging test printouts
+     * @param type $obj
      */
-    private function is_array_of_objects($r) {
-        if (is_array($r) && isset($r[0])) {
-            if (is_object($r[0])) {
-                return true;
-            }
-        }
-        return false;
+    private function quickPrint($obj) {
+        fwrite(STDOUT, print_r($obj, true));
     }
 
 }
