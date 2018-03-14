@@ -8,7 +8,7 @@ Flattner.php is a class created to flatten the JSON; it first validates the JSON
 
 DEVELOPMENT:
 
-
+Work in progress
 
 
 
@@ -150,11 +150,3 @@ from the following s3 location. https://s3­us­west­2.amazonaws.com/datacoral.
 a. You can add unit tests for your code.
 b. Your code should take in the flattened JSONs that you generated as input and be
 able to reconstruct the original JSON.
-
-
-FAQ
-1. What language can I use?
-We like nodejs and python but feel free to use any language that you are comfortable
-with.
-2. What libraries can I use?
-You can use any standard library that is available.
