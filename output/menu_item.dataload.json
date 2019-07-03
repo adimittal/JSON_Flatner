@@ -1,0 +1,8 @@
+        {
+            "csv": "menu_item.csv",
+            "table": "cs_menu_item",
+            "headers": true,
+            "delim": ",",
+            "enclose": "\"",
+            "cols": "(id,__index,title,price,image,description,category,special)"
+        }

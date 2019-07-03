@@ -97,6 +97,7 @@ class Flattner
             file_put_contents($this->outputDir . "/$k.json", json_encode($v));
             $this->file_put_csv($k, $v);
             $this->file_put_map($k, $v);
+            $this->file_put_dataLoad_config($k);
         }
     }
 
@@ -114,6 +115,26 @@ class Flattner
             $csv .= implode(',', $row_r) . "\n";
         }
         file_put_contents($csvFile, trim($csv));
+    }
+
+    public function file_put_dataLoad_config($key)
+    {
+        
+        $outfile = $this->outputDir . "/$key.dataload.json";
+        $jsonFile = $this->outputDir . "/$key.json";
+        $headers = implode(',', $this->getHeaders($jsonFile));
+
+        $config = <<<HT
+        {
+            "csv": "$key.csv",
+            "table": "cs_$key",
+            "headers": true,
+            "delim": ",",
+            "enclose": "\"",
+            "cols": "($headers)"
+        }
+HT;
+        file_put_contents($outfile, $config);
     }
 
     /** Get Headers from flat json file */
