@@ -1,6 +1,6 @@
 <?php
 
-namespace DataCoral;
+namespace AcmeTutor;
 
 use function array_flip;
 use function array_keys;

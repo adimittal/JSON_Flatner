@@ -1,13 +1,14 @@
 <?php
 
-namespace DataCoral;
+namespace AcmeTutor;
 
 /**
  * Description of Flattner - flatten a JSON object and reconstruct it
  *
  * @author Aditya Mittal
  */
-class Flattner {
+class Flattner
+{
 
     private $json;
     private $decoded;
@@ -23,7 +24,8 @@ class Flattner {
      * Construct a flattner for the json to flatten and ensure its valid json
      * Input: jsonFile to flatten
      */
-    public function __construct($jsonFile) {
+    public function __construct($jsonFile)
+    {
         //Get the jsonFile contents, throw any errors like not finding the file
         try {
             $json = file_get_contents($jsonFile);
@@ -45,7 +47,8 @@ class Flattner {
      * Setup the Flattner
      * @param type $json
      */
-    private function init($json) {
+    private function init($json)
+    {
         //set the valid json into this flattner object
         $this->json = $json;
 
@@ -61,7 +64,8 @@ class Flattner {
     /**
      * Init the top level json object
      */
-    public function setTopLevel() {
+    public function setTopLevel()
+    {
         if (is_object($this->decoded) || is_array($this->decoded)) {
             foreach ($this->decoded as $k => $v) {
                 $this->topLevelObject = $k;
@@ -69,7 +73,8 @@ class Flattner {
         }
     }
 
-    public function getTopLevel() {
+    public function getTopLevel()
+    {
         return $this->topLevelObject;
     }
 
@@ -77,18 +82,78 @@ class Flattner {
      * If you wish to use a dir other than default
      * @param type $outputDir
      */
-    public function setOutputDir($outputDir) {
+    public function setOutputDir($outputDir)
+    {
         $this->outputDir = $outputDir;
     }
 
     /**
      * Get the flat array and output to files
      */
-    public function outputFiles() {
+    public function outputFiles()
+    {
         $flat = $this->flatten();
         foreach ($flat as $k => $v) {
             file_put_contents($this->outputDir . "/$k.json", json_encode($v));
+            $this->file_put_csv($k, $v);
+            $this->file_put_map($k, $v);
         }
+    }
+
+    public function file_put_csv($key, $value)
+    {
+        $csvFile = $this->outputDir . "/$key.csv";
+        $jsonFile = $this->outputDir . "/$key.json";
+        $headers = $this->getHeaders($jsonFile);
+        $csv = implode(',', $headers) . "\n";
+        foreach ($value as $v) {
+            $row_r = [];
+            foreach ($headers as $h) {
+                $row_r[] = $v[$h] !== null ? '"'.trim($v[$h]).'"' : '';
+            }
+            $csv .= implode(',', $row_r) . "\n";
+        }
+        file_put_contents($csvFile, trim($csv));
+    }
+
+    /** Get Headers from flat json file */
+    public function getHeaders($jsonFile)
+    {
+        $json_r = json_decode(file_get_contents($jsonFile), true);
+        $map = [];
+        foreach ($json_r as $row) {
+            foreach ($row as $k => $v) {
+                $map[$k] = gettype($v);
+            }
+        }
+        return $headers = array_keys($map);
+    }
+
+    public function file_put_map($key, $value)
+    {
+        $jsonFile = $this->outputDir . "/$key.json";
+        $mapFile = $this->outputDir . "/$key.map";
+        $json_r = json_decode(file_get_contents($jsonFile), true);
+        $map = [];
+        foreach ($json_r as $row) {
+            foreach ($row as $k => $v) {
+                $map[$k] = gettype($v);
+            }
+        }
+        $map_str = "";
+        foreach ($map as  $k => $v) {
+            switch ($v) {
+                case 'string':
+                    $v = 'v';
+                case 'integer':
+                    $v = 'i';
+                default:
+                    $v = 'v';
+            }
+
+            $map_str .= $k . ':' . $v . "\n";
+        }
+        file_put_contents($mapFile, trim($map_str));
     }
 
     /*
@@ -97,7 +162,8 @@ class Flattner {
      * @return - an array with filename as the index and the object to print to the files
      */
 
-    public function flatten() {
+    public function flatten()
+    {
         $flat = [];
         foreach ($this->decoded->{$this->topLevelObject} as $object) {
             $id = $object->id;
@@ -144,7 +210,8 @@ class Flattner {
      * @param $extras - for adding on the id and __index
      * @return type
      */
-    private function flattenObject($object, $prefix, $extras = []) {
+    private function flattenObject($object, $prefix, $extras = [])
+    {
         $flat = [];
         foreach ($extras as $k => $v) {
             $flat[$k] = $v;
@@ -167,7 +234,8 @@ class Flattner {
      * @param type $filename
      * @param type $flat
      */
-    public function writeFlatToFile($filename, $flat) {
+    public function writeFlatToFile($filename, $flat)
+    {
         file_put_contents($filename, json_encode($flat));
     }
 
@@ -179,14 +247,16 @@ class Flattner {
      * Check that json is valid before constructing
      * @throws \InvalidArgumentException
      */
-    public function ensureValidJson() {
+    public function ensureValidJson()
+    {
         //Try to decode the json, if its not decoded then it is not valid
         $ob = json_decode($this->json);
         if ($ob === null) {
             throw new \InvalidArgumentException(
-            sprintf(
-                    '"%s" is not a valid json', $this->json
-            )
+                sprintf(
+                    '"%s" is not a valid json',
+                    $this->json
+                )
             );
         }
     }
@@ -195,7 +265,8 @@ class Flattner {
      * We'll push a value or an object to the stack and increment the stackCount
      * @param type $val
      */
-    public function stackPush($val) {
+    public function stackPush($val)
+    {
         $this->stack[] = $val;
         $this->stackCount += 1;
     }
@@ -204,7 +275,8 @@ class Flattner {
      * We'll decrement stack count and return the last value
      * @param type $val
      */
-    public function stackPop() {
+    public function stackPop()
+    {
         if (!empty($this->stack) && $this->stackCount > 0) {
             end($this->stack);
             $lastKey = key($this->stack);
@@ -223,7 +295,8 @@ class Flattner {
      * @param type $prefix
      * @return type
      */
-    private function createFileObj($k, $v, $prefix = '', $extras = []) {
+    private function createFileObj($k, $v, $prefix = '', $extras = [])
+    {
         $delim = !empty($prefix) ? "_" : '';
         $filename = $prefix . $delim . $this->inflector->singularize($k); //We create the new filename for the object as the outerobjects_object and the object name is in singular
         $object = $v;
@@ -234,8 +307,8 @@ class Flattner {
      * Just to help during debugging test printouts
      * @param type $obj
      */
-    private function quickPrint($obj) {
+    private function quickPrint($obj)
+    {
         fwrite(STDOUT, print_r($obj, true));
     }
-
 }

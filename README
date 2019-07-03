@@ -145,9 +145,6 @@ scores
 2. To simplify things, you can assume the following:
 a. The maximum JSON nesting depth is 5.
 b. Strings only use UTF­8 chars
-3. To help with your testing, you can use the three JSON files which can be downloaded
-from the following s3 location. https://s3­us­west­2.amazonaws.com/datacoral.codex.
-4. Email a working version of your solution to solved@datacoral.co
 5. We may validate your code with other test inputs
 6. For bonus points,
 a. You can add unit tests for your code.

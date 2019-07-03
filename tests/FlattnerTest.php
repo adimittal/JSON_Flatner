@@ -1,6 +1,6 @@
 <?php
 
-namespace DataCoral;
+namespace AcmeTutor;
 
 //normally I use autoloader for larger projects to manage dependencies but here I will just require
 require_once 'src/Flattner.php';
