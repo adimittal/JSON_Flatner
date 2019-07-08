@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -9,6 +9,7 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
+use PHPUnit\Framework\Exception;
 use ReflectionClass;
 
 /**
@@ -26,15 +27,11 @@ class ClassHasAttribute extends Constraint
 
     public function __construct(string $attributeName)
     {
-        parent::__construct();
-
         $this->attributeName = $attributeName;
     }
 
     /**
      * Returns a string representation of the constraint.
-     *
-     * @return string
      */
     public function toString(): string
     {
@@ -49,14 +46,18 @@ class ClassHasAttribute extends Constraint
      * constraint is met, false otherwise.
      *
      * @param mixed $other value or object to evaluate
-     *
-     * @return bool
      */
     protected function matches($other): bool
     {
-        $class = new ReflectionClass($other);
-
-        return $class->hasProperty($this->attributeName);
+        try {
+            return (new ReflectionClass($other))->hasProperty($this->attributeName);
+        } catch (\ReflectionException $e) {
+            throw new Exception(
+                $e->getMessage(),
+                (int) $e->getCode(),
+                $e
+            );
+        }
     }
 
     /**
@@ -66,8 +67,6 @@ class ClassHasAttribute extends Constraint
      * cases. This method should return the second part of that sentence.
      *
      * @param mixed $other evaluated value or object
-     *
-     * @return string
      */
     protected function failureDescription($other): string
     {

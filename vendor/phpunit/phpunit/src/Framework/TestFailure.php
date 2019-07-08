@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -13,79 +13,27 @@ use PHPUnit\Framework\Error\Error;
 use Throwable;
 
 /**
- * A TestFailure collects a failed test together with the caught exception.
+ * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-class TestFailure
+final class TestFailure
 {
     /**
      * @var null|Test
      */
-    protected $failedTest;
+    private $failedTest;
 
     /**
      * @var Throwable
      */
-    protected $thrownException;
+    private $thrownException;
+
     /**
      * @var string
      */
     private $testName;
 
     /**
-     * Constructs a TestFailure with the given test and exception.
-     *
-     * @param Test      $failedTest
-     * @param Throwable $t
-     */
-    public function __construct(Test $failedTest, $t)
-    {
-        if ($failedTest instanceof SelfDescribing) {
-            $this->testName = $failedTest->toString();
-        } else {
-            $this->testName = \get_class($failedTest);
-        }
-
-        if (!$failedTest instanceof TestCase || !$failedTest->isInIsolation()) {
-            $this->failedTest = $failedTest;
-        }
-
-        $this->thrownException = $t;
-    }
-
-    /**
-     * Returns a short description of the failure.
-     *
-     * @return string
-     */
-    public function toString(): string
-    {
-        return \sprintf(
-            '%s: %s',
-            $this->testName,
-            $this->thrownException->getMessage()
-        );
-    }
-
-    /**
-     * Returns a description for the thrown exception.
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return string
-     */
-    public function getExceptionAsString(): string
-    {
-        return self::exceptionToString($this->thrownException);
-    }
-
-    /**
      * Returns a description for an exception.
-     *
-     * @param Throwable $e
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return string
      */
     public static function exceptionToString(Throwable $e): string
     {
@@ -94,6 +42,10 @@ class TestFailure
 
             if ($e instanceof ExpectationFailedException && $e->getComparisonFailure()) {
                 $buffer .= $e->getComparisonFailure()->getDiff();
+            }
+
+            if ($e instanceof PHPTAssertionFailedError) {
+                $buffer .= $e->getDiff();
             }
 
             if (!empty($buffer)) {
@@ -115,9 +67,47 @@ class TestFailure
     }
 
     /**
-     * Returns the name of the failing test (including data set, if any).
+     * Constructs a TestFailure with the given test and exception.
      *
-     * @return string
+     * @param Throwable $t
+     */
+    public function __construct(Test $failedTest, $t)
+    {
+        if ($failedTest instanceof SelfDescribing) {
+            $this->testName = $failedTest->toString();
+        } else {
+            $this->testName = \get_class($failedTest);
+        }
+
+        if (!$failedTest instanceof TestCase || !$failedTest->isInIsolation()) {
+            $this->failedTest = $failedTest;
+        }
+
+        $this->thrownException = $t;
+    }
+
+    /**
+     * Returns a short description of the failure.
+     */
+    public function toString(): string
+    {
+        return \sprintf(
+            '%s: %s',
+            $this->testName,
+            $this->thrownException->getMessage()
+        );
+    }
+
+    /**
+     * Returns a description for the thrown exception.
+     */
+    public function getExceptionAsString(): string
+    {
+        return self::exceptionToString($this->thrownException);
+    }
+
+    /**
+     * Returns the name of the failing test (including data set, if any).
      */
     public function getTestName(): string
     {
@@ -131,8 +121,6 @@ class TestFailure
      * isolation.
      *
      * @see Exception
-     *
-     * @return null|Test
      */
     public function failedTest(): ?Test
     {
@@ -141,8 +129,6 @@ class TestFailure
 
     /**
      * Gets the thrown exception.
-     *
-     * @return Throwable
      */
     public function thrownException(): Throwable
     {
@@ -151,8 +137,6 @@ class TestFailure
 
     /**
      * Returns the exception's message.
-     *
-     * @return string
      */
     public function exceptionMessage(): string
     {
@@ -162,8 +146,6 @@ class TestFailure
     /**
      * Returns true if the thrown exception
      * is of type AssertionFailedError.
-     *
-     * @return bool
      */
     public function isFailure(): bool
     {

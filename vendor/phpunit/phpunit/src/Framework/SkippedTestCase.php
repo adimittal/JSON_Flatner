@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -10,15 +10,10 @@
 namespace PHPUnit\Framework;
 
 /**
- * A skipped test case
+ * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-class SkippedTestCase extends TestCase
+final class SkippedTestCase extends TestCase
 {
-    /**
-     * @var string
-     */
-    protected $message = '';
-
     /**
      * @var bool
      */
@@ -40,24 +35,17 @@ class SkippedTestCase extends TestCase
     protected $useErrorHandler = false;
 
     /**
-     * @var bool
+     * @var string
      */
-    protected $useOutputBuffering = false;
+    private $message;
 
-    /**
-     * @param string $message
-     * @param mixed  $className
-     * @param mixed  $methodName
-     */
-    public function __construct($className, $methodName, $message = '')
+    public function __construct(string $className, string $methodName, string $message = '')
     {
-        $this->message = $message;
         parent::__construct($className . '::' . $methodName);
+
+        $this->message = $message;
     }
 
-    /**
-     * @return string
-     */
     public function getMessage(): string
     {
         return $this->message;
@@ -67,8 +55,6 @@ class SkippedTestCase extends TestCase
      * Returns a string representation of the test case.
      *
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return string
      */
     public function toString(): string
     {

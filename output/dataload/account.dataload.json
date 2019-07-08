@@ -1,0 +1,8 @@
+        {
+            "csv": "account.csv",
+            "table": "cs_account",
+            "headers": true,
+            "delim": ",",
+            "enclose": "\"",
+            "cols": "(id,account_number,description,name)"
+        }

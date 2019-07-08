@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -9,15 +9,12 @@
  */
 namespace PHPUnit\Util;
 
+/**
+ * @internal This class is not covered by the backward compatibility promise for PHPUnit
+ */
 final class RegularExpression
 {
     /**
-     * @param string $pattern
-     * @param string $subject
-     * @param array  $matches
-     * @param int    $flags
-     * @param int    $offset
-     *
      * @throws \Exception
      *
      * @return false|int

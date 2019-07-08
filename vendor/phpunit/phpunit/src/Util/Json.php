@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -7,21 +7,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\Util;
 
 use PHPUnit\Framework\Exception;
 
+/**
+ * @internal This class is not covered by the backward compatibility promise for PHPUnit
+ */
 final class Json
 {
     /**
      * Prettify json string
      *
-     * @param string $json
-     *
      * @throws \PHPUnit\Framework\Exception
-     *
-     * @return string
      */
     public static function prettify(string $json): string
     {
@@ -33,7 +31,7 @@ final class Json
             );
         }
 
-        return \json_encode($decodedJson, JSON_PRETTY_PRINT);
+        return \json_encode($decodedJson, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES);
     }
 
     /*
@@ -65,7 +63,7 @@ final class Json
      */
     private static function recursiveSort(&$json): void
     {
-        if (\is_array($json) === false) {
+        if (!\is_array($json)) {
             // If the object is not empty, change it to an associative array
             // so we can sort the keys (and we will still re-encode it
             // correctly, since PHP encodes associative arrays as JSON objects.)

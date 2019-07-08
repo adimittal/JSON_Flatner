@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -13,7 +13,7 @@ namespace PHPUnit\Framework\Constraint;
  * Constraint that asserts that the value it is evaluated for is greater
  * than a given value.
  */
-class GreaterThan extends Constraint
+final class GreaterThan extends Constraint
 {
     /**
      * @var float|int
@@ -25,8 +25,6 @@ class GreaterThan extends Constraint
      */
     public function __construct($value)
     {
-        parent::__construct();
-
         $this->value = $value;
     }
 
@@ -34,12 +32,10 @@ class GreaterThan extends Constraint
      * Returns a string representation of the constraint.
      *
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return string
      */
     public function toString(): string
     {
-        return 'is greater than ' . $this->exporter->export($this->value);
+        return 'is greater than ' . $this->exporter()->export($this->value);
     }
 
     /**
@@ -47,8 +43,6 @@ class GreaterThan extends Constraint
      * constraint is met, false otherwise.
      *
      * @param mixed $other value or object to evaluate
-     *
-     * @return bool
      */
     protected function matches($other): bool
     {

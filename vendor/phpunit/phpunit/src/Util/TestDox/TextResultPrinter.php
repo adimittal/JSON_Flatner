@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -10,15 +10,12 @@
 namespace PHPUnit\Util\TestDox;
 
 /**
- * Prints TestDox documentation in text format to files.
- * For the CLI testdox printer please refer to \PHPUnit\TextUI\TextDoxPrinter.
+ * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-class TextResultPrinter extends ResultPrinter
+final class TextResultPrinter extends ResultPrinter
 {
     /**
      * Handler for 'start class' event.
-     *
-     * @param string $name
      */
     protected function startClass(string $name): void
     {
@@ -27,9 +24,6 @@ class TextResultPrinter extends ResultPrinter
 
     /**
      * Handler for 'on test' event.
-     *
-     * @param string $name
-     * @param bool   $success
      */
     protected function onTest($name, bool $success = true): void
     {
@@ -44,8 +38,6 @@ class TextResultPrinter extends ResultPrinter
 
     /**
      * Handler for 'end class' event.
-     *
-     * @param string $name
      */
     protected function endClass(string $name): void
     {

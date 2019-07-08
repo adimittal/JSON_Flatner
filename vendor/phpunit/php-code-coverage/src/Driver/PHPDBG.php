@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of the php-code-coverage package.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace SebastianBergmann\CodeCoverage\Driver;
 
 use SebastianBergmann\CodeCoverage\RuntimeException;
@@ -24,7 +23,7 @@ final class PHPDBG implements Driver
      */
     public function __construct()
     {
-        if (PHP_SAPI !== 'phpdbg') {
+        if (\PHP_SAPI !== 'phpdbg') {
             throw new RuntimeException(
                 'This driver requires the PHPDBG SAPI'
             );

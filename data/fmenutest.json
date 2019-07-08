@@ -1,0 +1,41 @@
+{
+    "menus": [
+        {
+            "id": "1",
+            "title": "Player Menu",
+            "hours": "24 hours",
+            "items": [
+                {
+                    "id": "1",
+                    "title": "Wonton Soup",
+                    "price": "7",
+                    "image": "https://eatoutsocial.com/pages/bay101/players_menu_img/./Wonton%20Soup/1.%20wontons_1-680x952.jpg",
+                    "description": "Shrimp & Pork Dumpling, Bok Choy",
+                    "category": "soup",
+                    "addons": [
+                        {
+                            "name": "large",
+                            "price": "2"
+                        }
+                    ],
+                    "special": "v0"
+                },
+                {
+                    "id": "2",
+                    "title": "Beef Pho",
+                    "price": "7",
+                    "image": "https://eatoutsocial.com/pages/bay101/players_menu_img/./%20Beef%20Pho/1.%201382451880742.jpeg",
+                    "description": "Veal Broth, Brisket, Tendon, Tripe, Meatballs, Rare Flank",
+                    "category": "soup",
+                    "addons": [
+                        {
+                            "name": "large",
+                            "price": "5"
+                        }
+                    ],
+                    "special": "v0"
+                }
+            ]
+        }
+    ]
+}

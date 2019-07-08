@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of the php-code-coverage package.
  *
@@ -7,11 +7,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace SebastianBergmann\CodeCoverage\Report;
 
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Node\File;
+use SebastianBergmann\CodeCoverage\RuntimeException;
 
 final class Crap4j
 {
@@ -38,7 +38,7 @@ final class Crap4j
 
         $project = $document->createElement('project', \is_string($name) ? $name : '');
         $root->appendChild($project);
-        $root->appendChild($document->createElement('timestamp', \date('Y-m-d H:i:s', (int) $_SERVER['REQUEST_TIME'])));
+        $root->appendChild($document->createElement('timestamp', \date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME'])));
 
         $stats       = $document->createElement('stats');
         $methodsNode = $document->createElement('methods');
@@ -86,10 +86,10 @@ final class Crap4j
                     $methodNode->appendChild($document->createElement('methodName', $methodName));
                     $methodNode->appendChild($document->createElement('methodSignature', \htmlspecialchars($method['signature'])));
                     $methodNode->appendChild($document->createElement('fullMethod', \htmlspecialchars($method['signature'])));
-                    $methodNode->appendChild($document->createElement('crap', $this->roundValue($method['crap'])));
-                    $methodNode->appendChild($document->createElement('complexity', $method['ccn']));
-                    $methodNode->appendChild($document->createElement('coverage', $this->roundValue($method['coverage'])));
-                    $methodNode->appendChild($document->createElement('crapLoad', \round($crapLoad)));
+                    $methodNode->appendChild($document->createElement('crap', (string) $this->roundValue($method['crap'])));
+                    $methodNode->appendChild($document->createElement('complexity', (string) $method['ccn']));
+                    $methodNode->appendChild($document->createElement('coverage', (string) $this->roundValue($method['coverage'])));
+                    $methodNode->appendChild($document->createElement('crapLoad', (string) \round($crapLoad)));
 
                     $methodsNode->appendChild($methodNode);
                 }
@@ -97,10 +97,10 @@ final class Crap4j
         }
 
         $stats->appendChild($document->createElement('name', 'Method Crap Stats'));
-        $stats->appendChild($document->createElement('methodCount', $fullMethodCount));
-        $stats->appendChild($document->createElement('crapMethodCount', $fullCrapMethodCount));
-        $stats->appendChild($document->createElement('crapLoad', \round($fullCrapLoad)));
-        $stats->appendChild($document->createElement('totalCrap', $fullCrap));
+        $stats->appendChild($document->createElement('methodCount', (string) $fullMethodCount));
+        $stats->appendChild($document->createElement('crapMethodCount', (string) $fullCrapMethodCount));
+        $stats->appendChild($document->createElement('crapLoad', (string) \round($fullCrapLoad)));
+        $stats->appendChild($document->createElement('totalCrap', (string) $fullCrap));
 
         $crapMethodPercent = 0;
 
@@ -108,7 +108,7 @@ final class Crap4j
             $crapMethodPercent = $this->roundValue((100 * $fullCrapMethodCount) / $fullMethodCount);
         }
 
-        $stats->appendChild($document->createElement('crapMethodPercent', $crapMethodPercent));
+        $stats->appendChild($document->createElement('crapMethodPercent', (string) $crapMethodPercent));
 
         $root->appendChild($stats);
         $root->appendChild($methodsNode);
@@ -116,11 +116,18 @@ final class Crap4j
         $buffer = $document->saveXML();
 
         if ($target !== null) {
-            if (!@\mkdir(\dirname($target), 0777, true) && !\is_dir(\dirname($target))) {
+            if (!$this->createDirectory(\dirname($target))) {
                 throw new \RuntimeException(\sprintf('Directory "%s" was not created', \dirname($target)));
             }
 
-            \file_put_contents($target, $buffer);
+            if (@\file_put_contents($target, $buffer) === false) {
+                throw new RuntimeException(
+                    \sprintf(
+                        'Could not write to "%s',
+                        $target
+                    )
+                );
+            }
         }
 
         return $buffer;
@@ -130,8 +137,6 @@ final class Crap4j
      * @param float $crapValue
      * @param int   $cyclomaticComplexity
      * @param float $coveragePercent
-     *
-     * @return float
      */
     private function getCrapLoad($crapValue, $cyclomaticComplexity, $coveragePercent): float
     {
@@ -147,11 +152,14 @@ final class Crap4j
 
     /**
      * @param float $value
-     *
-     * @return float
      */
     private function roundValue($value): float
     {
         return \round($value, 2);
+    }
+
+    private function createDirectory(string $directory): bool
+    {
+        return !(!\is_dir($directory) && !@\mkdir($directory, 0777, true) && !\is_dir($directory));
     }
 }

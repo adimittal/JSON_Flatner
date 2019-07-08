@@ -1,0 +1,8 @@
+        {
+            "csv": "restaurant_grade.csv",
+            "table": "cs_restaurant_grade",
+            "headers": true,
+            "delim": ",",
+            "enclose": "\"",
+            "cols": "(id,__index,date,grade)"
+        }

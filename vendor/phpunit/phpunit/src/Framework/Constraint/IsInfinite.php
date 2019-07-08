@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -12,12 +12,10 @@ namespace PHPUnit\Framework\Constraint;
 /**
  * Constraint that accepts infinite.
  */
-class IsInfinite extends Constraint
+final class IsInfinite extends Constraint
 {
     /**
      * Returns a string representation of the constraint.
-     *
-     * @return string
      */
     public function toString(): string
     {
@@ -29,8 +27,6 @@ class IsInfinite extends Constraint
      * constraint is met, false otherwise.
      *
      * @param mixed $other value or object to evaluate
-     *
-     * @return bool
      */
     protected function matches($other): bool
     {

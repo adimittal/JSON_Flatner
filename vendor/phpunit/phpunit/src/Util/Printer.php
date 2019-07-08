@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -12,7 +12,7 @@ namespace PHPUnit\Util;
 use PHPUnit\Framework\Exception;
 
 /**
- * Utility class that can print to STDOUT or write to a file.
+ * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
 class Printer
 {
@@ -36,7 +36,7 @@ class Printer
     /**
      * Constructor.
      *
-     * @param mixed $out
+     * @param null|resource|string $out
      *
      * @throws Exception
      */
@@ -53,8 +53,8 @@ class Printer
 
                     $this->out = \fsockopen($out[0], $out[1]);
                 } else {
-                    if (\strpos($out, 'php://') === false && !@\mkdir(\dirname($out), 0777, true) && !\is_dir(\dirname($out))) {
-                        throw new \RuntimeException(\sprintf('Directory "%s" was not created', \dirname($out)));
+                    if (\strpos($out, 'php://') === false && !Filesystem::createDirectory(\dirname($out))) {
+                        throw new Exception(\sprintf('Directory "%s" was not created', \dirname($out)));
                     }
 
                     $this->out = \fopen($out, 'wt');
@@ -93,9 +93,6 @@ class Printer
         }
     }
 
-    /**
-     * @param string $buffer
-     */
     public function write(string $buffer): void
     {
         if ($this->out) {
@@ -105,8 +102,8 @@ class Printer
                 $this->incrementalFlush();
             }
         } else {
-            if (PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg') {
-                $buffer = \htmlspecialchars($buffer, ENT_SUBSTITUTE);
+            if (\PHP_SAPI !== 'cli' && \PHP_SAPI !== 'phpdbg') {
+                $buffer = \htmlspecialchars($buffer, \ENT_SUBSTITUTE);
             }
 
             print $buffer;
@@ -119,8 +116,6 @@ class Printer
 
     /**
      * Check auto-flush mode.
-     *
-     * @return bool
      */
     public function getAutoFlush(): bool
     {
@@ -132,8 +127,6 @@ class Printer
      *
      * If set, *incremental* flushes will be done after each write. This should
      * not be confused with the different effects of this class' flush() method.
-     *
-     * @param bool $autoFlush
      */
     public function setAutoFlush(bool $autoFlush): void
     {

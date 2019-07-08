@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -15,20 +15,15 @@ use PHPUnit\Util\Filesystem;
 use ReflectionClass;
 
 /**
- * The standard test suite loader.
+ * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-class StandardTestSuiteLoader implements TestSuiteLoader
+final class StandardTestSuiteLoader implements TestSuiteLoader
 {
     /**
-     * @param string $suiteClassName
-     * @param string $suiteClassFile
-     *
      * @throws Exception
      * @throws \PHPUnit\Framework\Exception
-     *
-     * @return ReflectionClass
      */
-    public function load($suiteClassName, $suiteClassFile = ''): ReflectionClass
+    public function load(string $suiteClassName, string $suiteClassFile = ''): ReflectionClass
     {
         $suiteClassName = \str_replace('.php', '', $suiteClassName);
 
@@ -48,11 +43,20 @@ class StandardTestSuiteLoader implements TestSuiteLoader
             );
         }
 
-        if (!\class_exists($suiteClassName, false) && !empty($loadedClasses)) {
+        if (!empty($loadedClasses) && !\class_exists($suiteClassName, false)) {
             $offset = 0 - \strlen($suiteClassName);
 
             foreach ($loadedClasses as $loadedClass) {
-                $class = new ReflectionClass($loadedClass);
+                try {
+                    $class = new ReflectionClass($loadedClass);
+                } catch (\ReflectionException $e) {
+                    throw new Exception(
+                        $e->getMessage(),
+                        (int) $e->getCode(),
+                        $e
+                    );
+                }
+
                 if (\substr($loadedClass, $offset) === $suiteClassName &&
                     $class->getFileName() == $filename) {
                     $suiteClassName = $loadedClass;
@@ -62,11 +66,20 @@ class StandardTestSuiteLoader implements TestSuiteLoader
             }
         }
 
-        if (!\class_exists($suiteClassName, false) && !empty($loadedClasses)) {
+        if (!empty($loadedClasses) && !\class_exists($suiteClassName, false)) {
             $testCaseClass = TestCase::class;
 
             foreach ($loadedClasses as $loadedClass) {
-                $class     = new ReflectionClass($loadedClass);
+                try {
+                    $class = new ReflectionClass($loadedClass);
+                } catch (\ReflectionException $e) {
+                    throw new Exception(
+                        $e->getMessage(),
+                        (int) $e->getCode(),
+                        $e
+                    );
+                }
+
                 $classFile = $class->getFileName();
 
                 if ($class->isSubclassOf($testCaseClass) && !$class->isAbstract()) {
@@ -79,7 +92,15 @@ class StandardTestSuiteLoader implements TestSuiteLoader
                 }
 
                 if ($class->hasMethod('suite')) {
-                    $method = $class->getMethod('suite');
+                    try {
+                        $method = $class->getMethod('suite');
+                    } catch (\ReflectionException $e) {
+                        throw new Exception(
+                            $e->getMessage(),
+                            (int) $e->getCode(),
+                            $e
+                        );
+                    }
 
                     if (!$method->isAbstract() && $method->isPublic() && $method->isStatic()) {
                         $suiteClassName = $loadedClass;
@@ -93,7 +114,15 @@ class StandardTestSuiteLoader implements TestSuiteLoader
         }
 
         if (\class_exists($suiteClassName, false)) {
-            $class = new ReflectionClass($suiteClassName);
+            try {
+                $class = new ReflectionClass($suiteClassName);
+            } catch (\ReflectionException $e) {
+                throw new Exception(
+                    $e->getMessage(),
+                    (int) $e->getCode(),
+                    $e
+                );
+            }
 
             if ($class->getFileName() == \realpath($suiteClassFile)) {
                 return $class;
@@ -109,11 +138,6 @@ class StandardTestSuiteLoader implements TestSuiteLoader
         );
     }
 
-    /**
-     * @param ReflectionClass $aClass
-     *
-     * @return ReflectionClass
-     */
     public function reload(ReflectionClass $aClass): ReflectionClass
     {
         return $aClass;

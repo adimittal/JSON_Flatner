@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -9,26 +9,18 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
-class ExceptionMessage extends Constraint
+final class ExceptionMessage extends Constraint
 {
     /**
      * @var string
      */
     private $expectedMessage;
 
-    /**
-     * @param string $expected
-     */
-    public function __construct($expected)
+    public function __construct(string $expected)
     {
-        parent::__construct();
-
         $this->expectedMessage = $expected;
     }
 
-    /**
-     * @return string
-     */
     public function toString(): string
     {
         if ($this->expectedMessage === '') {
@@ -43,8 +35,6 @@ class ExceptionMessage extends Constraint
      * constraint is met, false otherwise.
      *
      * @param \Throwable $other
-     *
-     * @return bool
      */
     protected function matches($other): bool
     {
@@ -62,8 +52,6 @@ class ExceptionMessage extends Constraint
      * cases. This method should return the second part of that sentence.
      *
      * @param mixed $other evaluated value or object
-     *
-     * @return string
      */
     protected function failureDescription($other): string
     {

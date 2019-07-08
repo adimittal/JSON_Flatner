@@ -1,6 +1,6 @@
 <?php
 
-namespace AcmeTutor;
+namespace JSONFlatner;
 
 use function array_flip;
 use function array_keys;

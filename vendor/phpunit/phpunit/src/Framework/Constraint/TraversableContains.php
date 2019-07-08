@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -15,7 +15,7 @@ use SplObjectStorage;
  * Constraint that asserts that the Traversable it is applied to contains
  * a given value.
  */
-class TraversableContains extends Constraint
+final class TraversableContains extends Constraint
 {
     /**
      * @var bool
@@ -33,16 +33,10 @@ class TraversableContains extends Constraint
     private $value;
 
     /**
-     * @param mixed $value
-     * @param bool  $checkForObjectIdentity
-     * @param bool  $checkForNonObjectIdentity
-     *
      * @throws \PHPUnit\Framework\Exception
      */
     public function __construct($value, bool $checkForObjectIdentity = true, bool $checkForNonObjectIdentity = false)
     {
-        parent::__construct();
-
         $this->checkForObjectIdentity    = $checkForObjectIdentity;
         $this->checkForNonObjectIdentity = $checkForNonObjectIdentity;
         $this->value                     = $value;
@@ -52,8 +46,6 @@ class TraversableContains extends Constraint
      * Returns a string representation of the constraint.
      *
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return string
      */
     public function toString(): string
     {
@@ -61,7 +53,7 @@ class TraversableContains extends Constraint
             return 'contains "' . $this->value . '"';
         }
 
-        return 'contains ' . $this->exporter->export($this->value);
+        return 'contains ' . $this->exporter()->export($this->value);
     }
 
     /**
@@ -69,8 +61,6 @@ class TraversableContains extends Constraint
      * constraint is met, false otherwise.
      *
      * @param mixed $other value or object to evaluate
-     *
-     * @return bool
      */
     protected function matches($other): bool
     {
@@ -112,8 +102,6 @@ class TraversableContains extends Constraint
      * @param mixed $other evaluated value or object
      *
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return string
      */
     protected function failureDescription($other): string
     {

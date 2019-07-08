@@ -1,8 +1,0 @@
-        {
-            "csv": "menu_item_addon.csv",
-            "table": "cs_menu_item_addon",
-            "headers": true,
-            "delim": ",",
-            "enclose": "\"",
-            "cols": "(id,__index,name,price)"
-        }

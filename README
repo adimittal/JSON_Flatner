@@ -1,3 +1,10 @@
+
+RUNNING UNIT TESTS:
+phpunit --bootstrap ./vendor/autoload.php FlatnerTest ./tests/FlatnerTest.php 
+
+
+
+
 FILES:
 Start.php can be called from the browser to process all the json files given in the array at the top of Start.php - 
 it will produce convenient links for viewing the produced json files from output folder as well 
@@ -8,7 +15,7 @@ it will produce convenient links for viewing the produced json files from output
 /desiredOutput is for tests to compare the output files to
 /output contains the resulting json files - note that the output folder must have proper write permissions
 
-Flattner.php is a class created to flatten the JSON; it first validates the JSON input
+Flatner.php is a class created to flatten the JSON; it first validates the JSON input
 
 DEVELOPMENT:
 Completed: Parsing and flattening the given json files
@@ -25,7 +32,7 @@ If I fixed the quote type, version also shows up in restaurant output, not given
 My code does not correct or ignore invalid lines of JSON, it throws an exception and catches it to let the user know
 
 I run my unit tests from command line in the root folder as follows:
-$ ./vendor/bin/phpunit --bootstrap vendor/autoload.php tests/FlattnerTest  (or just tests to run whole test folder)
+$ ./vendor/bin/phpunit --bootstrap vendor/autoload.php tests/FlatnerTest  (or just tests to run whole test folder)
 
 accounts.json and restaurants.json were used for testing; the stack I created is also tested with multiple push/pop operations in mixed order
 

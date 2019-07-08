@@ -1,7 +1,13 @@
 <?php
+use JSONFlatner\Flatner;
 
-require_once 'src/Flattner.php';
-require_once 'src/Inflector.php';
+require_once __DIR__ . '/src/Flatner.php';
+require_once __DIR__ . '/src/Helper.php';
+require_once __DIR__ . '/src/Inflector.php';
+
+$a = 5;
+$b = 8;
+echo $a + $b;
 
 $inputFiles = [
     // 'data/restaurants.json',
@@ -12,8 +18,8 @@ $inputFiles = [
 ];
 
 foreach ($inputFiles as $inputFile) {
-    $flattner = new AcmeTutor\Flattner($inputFile);
-    $flattner->outputFiles();
+    $flatner = new Flatner($inputFile);
+    $flatner->outputFiles();
 }
 
 echo "Done processing files.  See output folder for the resulting files.";

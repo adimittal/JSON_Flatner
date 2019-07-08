@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
         {
             "name": "Listen for XDebug",
             "type": "php",
@@ -19,6 +20,30 @@
             "cwd": "${fileDirname}",
             "port": 9000,
             "runtimeExecutable": "/usr/local/php5/bin/php"
+        },
+        {
+            "name": "Debug unit test",
+            "type": "php",
+            "request": "launch",
+            "program": "/git/JSON_Flatner/tests/FlatnerTest.php",
+            "stopOnEntry": true,
+            "cwd": "/git/JSON_Flatner",
+            "port": 9000,
+            "args": ["--bootstrap ./vendor/autoload.php", "FlatnerTest"],
+            "runtimeExecutable": "phpunit"
+        },
+        {
+            "name": "start.php",
+            "type": "php",
+            "request": "launch",
+            "program": "start.php",
+            "stopOnEntry": true,
+            "cwd": "/git/JSON_Flatner",
+            "port": 9000,
+            "runtimeExecutable": "/usr/local/php5/bin/php",
+            "pathMappings": {
+                "/var/www/html": "/git/JSON_Flatner"
+            }
         }
     ]
 }

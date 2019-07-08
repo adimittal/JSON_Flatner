@@ -1,0 +1,8 @@
+        {
+            "csv": "restaurant_address.csv",
+            "table": "cs_restaurant_address",
+            "headers": true,
+            "delim": ",",
+            "enclose": "\"",
+            "cols": "(id,__index,building,coord,street,zipcode)"
+        }

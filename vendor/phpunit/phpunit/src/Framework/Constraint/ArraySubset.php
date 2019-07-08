@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -17,11 +17,15 @@ use SebastianBergmann\Comparator\ComparisonFailure;
  *
  * Uses array_replace_recursive() to check if a key value subset is part of the
  * subject array.
+ *
+ * @codeCoverageIgnore
+ *
+ * @deprecated https://github.com/sebastianbergmann/phpunit/issues/3494
  */
-class ArraySubset extends Constraint
+final class ArraySubset extends Constraint
 {
     /**
-     * @var array|\Traversable
+     * @var iterable
      */
     private $subset;
 
@@ -30,14 +34,8 @@ class ArraySubset extends Constraint
      */
     private $strict;
 
-    /**
-     * @param array|\Traversable $subset
-     * @param bool               $strict Check for object identity
-     */
-    public function __construct($subset, $strict = false)
+    public function __construct(iterable $subset, bool $strict = false)
     {
-        parent::__construct();
-
         $this->strict = $strict;
         $this->subset = $subset;
     }
@@ -52,16 +50,10 @@ class ArraySubset extends Constraint
      * a boolean value instead: true in case of success, false in case of a
      * failure.
      *
-     * @param mixed  $other        value or object to evaluate
-     * @param string $description  Additional information about the test
-     * @param bool   $returnResult Whether to return a result or throw an exception
-     *
      * @throws ExpectationFailedException
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return mixed
      */
-    public function evaluate($other, $description = '', $returnResult = false)
+    public function evaluate($other, string $description = '', bool $returnResult = false)
     {
         //type cast $other & $this->subset as an array to allow
         //support in standard array functions.
@@ -84,8 +76,8 @@ class ArraySubset extends Constraint
             $f = new ComparisonFailure(
                 $patched,
                 $other,
-                \print_r($patched, true),
-                \print_r($other, true)
+                \var_export($patched, true),
+                \var_export($other, true)
             );
 
             $this->fail($other, $description, $f);
@@ -96,12 +88,10 @@ class ArraySubset extends Constraint
      * Returns a string representation of the constraint.
      *
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return string
      */
     public function toString(): string
     {
-        return 'has the subset ' . $this->exporter->export($this->subset);
+        return 'has the subset ' . $this->exporter()->export($this->subset);
     }
 
     /**
@@ -113,20 +103,13 @@ class ArraySubset extends Constraint
      * @param mixed $other evaluated value or object
      *
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return string
      */
     protected function failureDescription($other): string
     {
         return 'an array ' . $this->toString();
     }
 
-    /**
-     * @param array|\Traversable $other
-     *
-     * @return array
-     */
-    private function toArray($other): array
+    private function toArray(iterable $other): array
     {
         if (\is_array($other)) {
             return $other;

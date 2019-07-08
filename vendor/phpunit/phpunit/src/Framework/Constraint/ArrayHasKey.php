@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -19,7 +19,7 @@ use ArrayAccess;
  *
  * The array key is passed in the constructor.
  */
-class ArrayHasKey extends Constraint
+final class ArrayHasKey extends Constraint
 {
     /**
      * @var int|string
@@ -31,7 +31,6 @@ class ArrayHasKey extends Constraint
      */
     public function __construct($key)
     {
-        parent::__construct();
         $this->key = $key;
     }
 
@@ -39,12 +38,10 @@ class ArrayHasKey extends Constraint
      * Returns a string representation of the constraint.
      *
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return string
      */
     public function toString(): string
     {
-        return 'has the key ' . $this->exporter->export($this->key);
+        return 'has the key ' . $this->exporter()->export($this->key);
     }
 
     /**
@@ -52,8 +49,6 @@ class ArrayHasKey extends Constraint
      * constraint is met, false otherwise.
      *
      * @param mixed $other value or object to evaluate
-     *
-     * @return bool
      */
     protected function matches($other): bool
     {
@@ -77,8 +72,6 @@ class ArrayHasKey extends Constraint
      * @param mixed $other evaluated value or object
      *
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return string
      */
     protected function failureDescription($other): string
     {

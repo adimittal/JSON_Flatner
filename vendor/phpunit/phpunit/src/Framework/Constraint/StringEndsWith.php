@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -13,26 +13,20 @@ namespace PHPUnit\Framework\Constraint;
  * Constraint that asserts that the string it is evaluated for ends with a given
  * suffix.
  */
-class StringEndsWith extends Constraint
+final class StringEndsWith extends Constraint
 {
     /**
      * @var string
      */
     private $suffix;
 
-    /**
-     * @param string $suffix
-     */
-    public function __construct($suffix)
+    public function __construct(string $suffix)
     {
-        parent::__construct();
         $this->suffix = $suffix;
     }
 
     /**
      * Returns a string representation of the constraint.
-     *
-     * @return string
      */
     public function toString(): string
     {
@@ -44,11 +38,9 @@ class StringEndsWith extends Constraint
      * constraint is met, false otherwise.
      *
      * @param mixed $other value or object to evaluate
-     *
-     * @return bool
      */
     protected function matches($other): bool
     {
-        return \substr($other, 0 - \strlen($this->suffix)) == $this->suffix;
+        return \substr($other, 0 - \strlen($this->suffix)) === $this->suffix;
     }
 }

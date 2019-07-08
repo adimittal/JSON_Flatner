@@ -7,41 +7,38 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\Runner;
 
 use SebastianBergmann\Version as VersionId;
 
-/**
- * This class defines the current version of PHPUnit.
- */
-class Version
+final class Version
 {
-    private static $pharVersion;
-    private static $version;
+    /**
+     * @var string
+     */
+    private static $pharVersion = '';
+
+    /**
+     * @var string
+     */
+    private static $version = '';
 
     /**
      * Returns the current version of PHPUnit.
-     *
-     * @return string
      */
     public static function id(): string
     {
-        if (self::$pharVersion !== null) {
+        if (self::$pharVersion !== '') {
             return self::$pharVersion;
         }
 
-        if (self::$version === null) {
-            $version       = new VersionId('7.0.2', \dirname(__DIR__, 2));
-            self::$version = $version->getVersion();
+        if (self::$version === '') {
+            self::$version = (new VersionId('8.2.4', \dirname(__DIR__, 2)))->getVersion();
         }
 
         return self::$version;
     }
 
-    /**
-     * @return string
-     */
     public static function series(): string
     {
         if (\strpos(self::id(), '-')) {
@@ -53,17 +50,11 @@ class Version
         return \implode('.', \array_slice(\explode('.', $version), 0, 2));
     }
 
-    /**
-     * @return string
-     */
     public static function getVersionString(): string
     {
         return 'PHPUnit ' . self::id() . ' by Sebastian Bergmann and contributors.';
     }
 
-    /**
-     * @return string
-     */
     public static function getReleaseChannel(): string
     {
         if (\strpos(self::$pharVersion, '-') !== false) {

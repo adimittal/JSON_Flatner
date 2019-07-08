@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -14,12 +14,10 @@ use Countable;
 /**
  * Constraint that checks whether a variable is empty().
  */
-class IsEmpty extends Constraint
+final class IsEmpty extends Constraint
 {
     /**
      * Returns a string representation of the constraint.
-     *
-     * @return string
      */
     public function toString(): string
     {
@@ -31,11 +29,13 @@ class IsEmpty extends Constraint
      * constraint is met, false otherwise.
      *
      * @param mixed $other value or object to evaluate
-     *
-     * @return bool
      */
     protected function matches($other): bool
     {
+        if ($other instanceof \EmptyIterator) {
+            return true;
+        }
+
         if ($other instanceof Countable) {
             return \count($other) === 0;
         }
@@ -50,8 +50,6 @@ class IsEmpty extends Constraint
      * cases. This method should return the second part of that sentence.
      *
      * @param mixed $other evaluated value or object
-     *
-     * @return string
      */
     protected function failureDescription($other): string
     {
@@ -59,7 +57,7 @@ class IsEmpty extends Constraint
 
         return \sprintf(
             '%s %s %s',
-            $type[0] == 'a' || $type[0] == 'o' ? 'an' : 'a',
+            \strpos($type, 'a') === 0 || \strpos($type, 'o') === 0 ? 'an' : 'a',
             $type,
             $this->toString()
         );

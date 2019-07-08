@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace PHPUnit\Framework\Constraint;
 
 use Countable;
@@ -21,12 +20,10 @@ use SebastianBergmann\Exporter\Exporter;
  */
 abstract class Constraint implements Countable, SelfDescribing
 {
-    protected $exporter;
-
-    public function __construct()
-    {
-        $this->exporter = new Exporter;
-    }
+    /**
+     * @var Exporter
+     */
+    private $exporter;
 
     /**
      * Evaluates the constraint for parameter $other
@@ -38,16 +35,10 @@ abstract class Constraint implements Countable, SelfDescribing
      * a boolean value instead: true in case of success, false in case of a
      * failure.
      *
-     * @param mixed  $other        value or object to evaluate
-     * @param string $description  Additional information about the test
-     * @param bool   $returnResult Whether to return a result or throw an exception
-     *
      * @throws ExpectationFailedException
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return mixed
      */
-    public function evaluate($other, $description = '', $returnResult = false)
+    public function evaluate($other, string $description = '', bool $returnResult = false)
     {
         $success = false;
 
@@ -66,12 +57,19 @@ abstract class Constraint implements Countable, SelfDescribing
 
     /**
      * Counts the number of constraint elements.
-     *
-     * @return int
      */
     public function count(): int
     {
         return 1;
+    }
+
+    protected function exporter(): Exporter
+    {
+        if ($this->exporter === null) {
+            $this->exporter = new Exporter;
+        }
+
+        return $this->exporter;
     }
 
     /**
@@ -81,8 +79,7 @@ abstract class Constraint implements Countable, SelfDescribing
      * This method can be overridden to implement the evaluation algorithm.
      *
      * @param mixed $other value or object to evaluate
-     *
-     * @return bool
+     * @codeCoverageIgnore
      */
     protected function matches($other): bool
     {
@@ -129,8 +126,6 @@ abstract class Constraint implements Countable, SelfDescribing
      * information like a diff
      *
      * @param mixed $other evaluated value or object
-     *
-     * @return string
      */
     protected function additionalFailureDescription($other): string
     {
@@ -149,11 +144,9 @@ abstract class Constraint implements Countable, SelfDescribing
      * @param mixed $other evaluated value or object
      *
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     *
-     * @return string
      */
     protected function failureDescription($other): string
     {
-        return $this->exporter->export($other) . ' ' . $this->toString();
+        return $this->exporter()->export($other) . ' ' . $this->toString();
     }
 }

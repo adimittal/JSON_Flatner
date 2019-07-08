@@ -79,7 +79,7 @@
             "external_links": [
                 {
                     "external_url": "http://www.geekwire.com/2011/rewind-ben-elowitz-wetpaint-ceo-building-type-media-company",
-                    "title": "GeekWire interview: Rewind - Ben Elowitz, Wetpaint CEO, on building a new type of media company"
+                    "title": "GeekWire interview:Rewind - Ben Elowitz, Wetpaint CEO, on building a new type of media company"
                 },
                 {
                     "external_url": "http://techcrunch.com/2012/06/17/search-and-social-how-two-will-soon-become-one/",
@@ -229,15 +229,14 @@
             ],
             "homepage_url": "http://wetpaint-inc.com",
             "image": {
-                "available_sizes":
-                    [
-                            150,
-                            75,
-                            250,
-                            125,
-                            450,
-                            225
-                    ]
+                "available_sizes": [
+                    150,
+                    75,
+                    250,
+                    125,
+                    450,
+                    225
+                ]
             },
             "investments": [],
             "milestones": [
@@ -302,7 +301,7 @@
                     "zip_code": "10012"
                 }
             ],
-            "overview": "<p>Wetpaint is a technology platform company that uses its proprietary state-of-the-art technology and expertise in social media to build and monetize audiences for digital publishers. Wetpaint\u2019s own online property, Wetpaint Entertainment, an entertainment news site that attracts more than 12 million unique visitors monthly and has over 2 million Facebook fans, is a proof point to the company\u2019s success in building and engaging audiences. Media companies can license Wetpaint\u2019s platform which includes a dynamic playbook tailored to their individual needs and comprehensive training. Founded by Internet pioneer Ben Elowitz, and with offices in New York and Seattle, Wetpaint is backed by Accel Partners, the investors behind Facebook.</p>",
+            "overview": "<p>Wetpaint is a technology platform company that uses its proprietary state-of-the-art technology and expertise in social media to build and monetize audiences for digital publishers. Wetpaint’s own online property, Wetpaint Entertainment, an entertainment news site that attracts more than 12 million unique visitors monthly and has over 2 million Facebook fans, is a proof point to the company’s success in building and engaging audiences. Media companies can license Wetpaint’s platform which includes a dynamic playbook tailored to their individual needs and comprehensive training. Founded by Internet pioneer Ben Elowitz, and with offices in New York and Seattle, Wetpaint is backed by Accel Partners, the investors behind Facebook.</p>",
             "partners": [],
             "permalink": "abc2",
             "phone_number": "206.859.6300",
@@ -476,12 +475,12 @@
                 {
                     "attribution": null,
                     "available_sizes": [
-                                150,
-                                86,
-                                250,
-                                143,
-                                450,
-                                258
+                        150,
+                        86,
+                        250,
+                        143,
+                        450,
+                        258
                     ]
                 }
             ],

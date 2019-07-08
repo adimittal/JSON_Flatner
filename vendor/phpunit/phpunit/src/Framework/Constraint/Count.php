@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -20,18 +20,13 @@ class Count extends Constraint
     /**
      * @var int
      */
-    private $expectedCount = 0;
+    private $expectedCount;
 
     public function __construct(int $expected)
     {
-        parent::__construct();
-
         $this->expectedCount = $expected;
     }
 
-    /**
-     * @return string
-     */
     public function toString(): string
     {
         return \sprintf(
@@ -43,10 +38,6 @@ class Count extends Constraint
     /**
      * Evaluates the constraint for parameter $other. Returns true if the
      * constraint is met, false otherwise.
-     *
-     * @param mixed $other
-     *
-     * @return bool
      */
     protected function matches($other): bool
     {
@@ -54,10 +45,14 @@ class Count extends Constraint
     }
 
     /**
-     * @param array|\Countable|\Traversable $other
+     * @param iterable $other
      */
     protected function getCountOf($other): ?int
     {
+        if ($other instanceof \EmptyIterator) {
+            return 0;
+        }
+
         if ($other instanceof Countable || \is_array($other)) {
             return \count($other);
         }
@@ -92,6 +87,8 @@ class Count extends Constraint
 
             return $count;
         }
+
+        return null;
     }
 
     /**
