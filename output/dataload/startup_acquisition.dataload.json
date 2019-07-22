@@ -1,0 +1,8 @@
+        {
+            "csv": "startup_acquisition.csv",
+            "table": "cs_startup_acquisition",
+            "headers": true,
+            "delim": ",",
+            "enclose": "\"",
+            "cols": "(startup_id,acquired_day,acquired_month,acquired_year,__index,name,permalink,price_amount,price_currency_code,source_description,source_url,term_code)"
+        }

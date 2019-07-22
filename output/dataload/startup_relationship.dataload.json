@@ -1,0 +1,8 @@
+        {
+            "csv": "startup_relationship.csv",
+            "table": "cs_startup_relationship",
+            "headers": true,
+            "delim": ",",
+            "enclose": "\"",
+            "cols": "(startup_id,__index,is_past,title,id)"
+        }

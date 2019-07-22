@@ -1,0 +1,8 @@
+        {
+            "csv": "donut_batter.csv",
+            "table": "cs_donut_batter",
+            "headers": true,
+            "delim": ",",
+            "enclose": "\"",
+            "cols": "(donut_id,__index)"
+        }

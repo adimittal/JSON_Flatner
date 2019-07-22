@@ -2,9 +2,6 @@
 RUNNING UNIT TESTS:
 phpunit --bootstrap ./vendor/autoload.php FlatnerTest ./tests/FlatnerTest.php 
 
-
-
-
 FILES:
 Start.php can be called from the browser to process all the json files given in the array at the top of Start.php - 
 it will produce convenient links for viewing the produced json files from output folder as well 

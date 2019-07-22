@@ -4,5 +4,5 @@
             "headers": true,
             "delim": ",",
             "enclose": "\"",
-            "cols": "(id,__index,x,y)"
+            "cols": "(restaurant_id,__index,restaurant_grade_id,x,y)"
         }

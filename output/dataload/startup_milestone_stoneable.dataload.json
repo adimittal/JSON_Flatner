@@ -1,0 +1,8 @@
+        {
+            "csv": "startup_milestone_stoneable.csv",
+            "table": "cs_startup_milestone_stoneable",
+            "headers": true,
+            "delim": ",",
+            "enclose": "\"",
+            "cols": "(startup_id,__index,startup_milestone_id,name,permalink)"
+        }

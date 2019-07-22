@@ -1,0 +1,8 @@
+        {
+            "csv": "startup_office.csv",
+            "table": "cs_startup_office",
+            "headers": true,
+            "delim": ",",
+            "enclose": "\"",
+            "cols": "(startup_id,__index,address1,address2,city,country_code,description,latitude,longitude,state_code,zip_code)"
+        }

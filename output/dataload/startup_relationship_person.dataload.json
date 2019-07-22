@@ -1,0 +1,8 @@
+        {
+            "csv": "startup_relationship_person.csv",
+            "table": "cs_startup_relationship_person",
+            "headers": true,
+            "delim": ",",
+            "enclose": "\"",
+            "cols": "(startup_id,__index,startup_relationship_id,first_name,last_name,permalink)"
+        }

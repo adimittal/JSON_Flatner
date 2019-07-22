@@ -10,10 +10,10 @@ $b = 8;
 echo $a + $b;
 
 $inputFiles = [
-    // 'data/restaurants.json',
-    // 'data/accounts.json',
-    // 'data/donuts.json',
-    // 'data/startups.json',
+    'data/restaurants.json',
+    'data/accounts.json',
+    'data/donuts.json',
+    'data/startups.json',
     'data/fullmenu.json'
 ];
 

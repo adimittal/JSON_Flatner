@@ -1,0 +1,8 @@
+        {
+            "csv": "startup.csv",
+            "table": "cs_startup",
+            "headers": true,
+            "delim": ",",
+            "enclose": "\"",
+            "cols": "(id,alias_list,blog_feed_url,blog_url,category_code,created_at,crunchbase_url,deadpooled_year,description,email_address,founded_day,founded_month,founded_year,homepage_url,name,number_of_employees,overview,permalink,phone_number,tag_list,total_money_raised,twitter_username,updated_at)"
+        }

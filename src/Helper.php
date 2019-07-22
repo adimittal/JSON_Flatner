@@ -14,6 +14,9 @@
 
 namespace JSONFlatner;
 
+/**
+ * Helper functions for the JSON Flatner
+ */
 class Helper
 {
     /**

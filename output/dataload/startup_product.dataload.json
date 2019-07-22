@@ -1,0 +1,8 @@
+        {
+            "csv": "startup_product.csv",
+            "table": "cs_startup_product",
+            "headers": true,
+            "delim": ",",
+            "enclose": "\"",
+            "cols": "(startup_id,__index,name,permalink)"
+        }

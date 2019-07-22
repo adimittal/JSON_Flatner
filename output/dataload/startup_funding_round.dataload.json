@@ -1,0 +1,8 @@
+        {
+            "csv": "startup_funding_round.csv",
+            "table": "cs_startup_funding_round",
+            "headers": true,
+            "delim": ",",
+            "enclose": "\"",
+            "cols": "(startup_id,__index,funded_day,funded_month,funded_year,raised_amount,raised_currency_code,round_code,source_description,source_url,id)"
+        }

@@ -1,0 +1,8 @@
+        {
+            "csv": "startup_milestone.csv",
+            "table": "cs_startup_milestone",
+            "headers": true,
+            "delim": ",",
+            "enclose": "\"",
+            "cols": "(startup_id,__index,description,source_description,source_text,source_url,stoneable_type,stoned_acquirer,stoned_day,stoned_month,stoned_value,stoned_value_type,stoned_year,id)"
+        }

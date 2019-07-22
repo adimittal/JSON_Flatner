@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * Description of test - just a file to print phpinfo() and containing xdebug details
+ * 
+ * PHP Version 7.2.9
+ *
+ * @category PHP
+ * @package  JSON_Flatner
+ * @author   Aditya Mittal <scientificchess@gmail.com>
+ * @license  Aditya Mittal
+ * @link     https://github.com/adimittal/JSON_Flatner
+ */
+
 phpinfo();
 
 /**

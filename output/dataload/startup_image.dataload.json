@@ -1,0 +1,8 @@
+        {
+            "csv": "startup_image.csv",
+            "table": "cs_startup_image",
+            "headers": true,
+            "delim": ",",
+            "enclose": "\"",
+            "cols": "(startup_id,__index,0,1,2,3,4,5)"
+        }

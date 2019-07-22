@@ -1,30 +1,72 @@
 <?php
 
+/**
+ * Description of Flatner
+ * 
+ * PHP Version 7.2.9
+ *
+ * @category PHP
+ * @package  JSON_Flatner
+ * @author   Aditya Mittal <scientificchess@gmail.com>
+ * @license  Aditya Mittal
+ * @link     https://github.com/adimittal/JSON_Flatner
+ */
+
 namespace JSONFlatner;
 
 use JSONFlatner\Helper;
 use TheSeer\Tokenizer\Exception;
 
 /**
- * Description of Flatner - flatten a JSON object and reconstruct it
+ * Flatten a JSON object and reconstruct it
  *
  * @author Aditya Mittal
  */
 class Flatner
 {
+    /**
+     * The contents of the JSON File without the endlines
+     */
     private $json;
+    /**
+     * Object decoded from the JSON
+     */
     private $decoded;
+    /**
+     * Stack for keeping track of the nested json, we pop the stack to ensure each level is flattened
+     */
     private $stack = [];
+    /**
+     * The depth of the stack so we know when to stop popping
+     */
     private $stackCount = 0;
+    /**
+     * A top level key is expected in the json, this is that key
+     */
     private $topLevelObjectKey = '';
+    /**
+     * Directory for output - there are 4 directories inside: csv, dataload, json, and map
+     * csv is the flattened csv files
+     * dataload is the metadata for loading the csv in db (ex. delimiter, column mapping)
+     * json is the flattened json without the nesting
+     * map is the column mapping to types used by the framework for creating the table structures
+     */
     private $outputDir = 'output';
+    /**
+     * Inflector is used to make things plural, singular etc. - instance of the inflector class.
+     */
     private $inflector;
+    /**
+     * Helper methods such as getting uuid, adding object id, fixing endlines, printing etc.
+     */
     private $_helper;
 
     /**
      * CONSTRUCTOR:
      * Construct a flatner for the json to flatten and ensure its valid json
      * Input: jsonFile to flatten
+     * 
+     * @param type $jsonFile - the json file to flatten
      */
     public function __construct($jsonFile)
     {
@@ -76,7 +118,7 @@ class Flatner
                 $this->topLevelObjectKey = $k;
                 $count++;
             }
-            if($count > 1) {
+            if ($count > 1) {
                 throw new Exception('Top Level Key must be exactly 1');
             }
         }
@@ -108,11 +150,17 @@ class Flatner
         foreach ($flat as $k => $v) {
             file_put_contents($this->outputDir . "/json/$k.json", json_encode($v));
             $this->file_put_csv($k, $v);
-            $this->file_put_map($k, $v);
+            $this->file_put_map($k);
             $this->file_put_dataLoad_config($k);
         }
     }
 
+    /**
+     * Create the flat csv file for the given key
+     * 
+     * @param type $key - the key labelling the flat part of the json
+     * @param type $value - the array of rows representing the values for the flat json
+     */
     public function file_put_csv($key, $value)
     {
         $csvFile = $this->outputDir . "/csv/$key.csv";
@@ -122,16 +170,21 @@ class Flatner
         foreach ($value as $v) {
             $row_r = [];
             foreach ($headers as $h) {
-                $row_r[] = $v[$h] !== null ? '"'.trim($v[$h]).'"' : '';
+                $row_r[] = isset($v[$h]) && $v[$h] !== null ? '"' . trim($v[$h]) . '"' : '';
             }
             $csv .= implode(',', $row_r) . "\r\n";
         }
         file_put_contents($csvFile, trim($csv));
     }
 
+    /**
+     * Generate the dataload configuration for a flat csv file by key
+     * 
+     * @param type $key - _ separated key describing the flat level from the json
+     */
     public function file_put_dataLoad_config($key)
     {
-        
+
         $outfile = $this->outputDir . "/dataload/$key.dataload.json";
         $jsonFile = $this->outputDir . "/json/$key.json";
         $headers = implode(',', $this->getHeaders($jsonFile));
@@ -149,7 +202,11 @@ HT;
         file_put_contents($outfile, $config);
     }
 
-    /** Get Headers from flat json file */
+    /** 
+     * Get Headers from flat json file 
+     * 
+     * @param type $jsonFile - the flat json file from which to get the headers
+     * */
     public function getHeaders($jsonFile)
     {
         $json_r = json_decode(file_get_contents($jsonFile), true);
@@ -162,7 +219,12 @@ HT;
         return $headers = array_keys($map);
     }
 
-    public function file_put_map($key, $value)
+    /**
+     * Create the map for Adi's framework so that tables can be autocreated
+     * 
+     * @param type $key
+     */
+    public function file_put_map($key)
     {
         $jsonFile = $this->outputDir . "/json/$key.json";
         $mapFile = $this->outputDir . "/map/$key.map";
@@ -189,13 +251,12 @@ HT;
         file_put_contents($mapFile, trim($map_str));
     }
 
-    /*
+    /**
      * Flatten the main json object and work through the stack of nested objects
      * Add in the id and __index as necessary
      * 
      * @return array flat - filename => flat object to print to the files
      */
-
     public function flatten()
     {
         $flat = [];
@@ -222,7 +283,7 @@ HT;
                         $flat[$filename][] = $this->flattenObject($v, $filename, $extras);
                         $index += 1;
                     } else {
-                        foreach($extras as $kextra => $vextra){
+                        foreach ($extras as $kextra => $vextra) {
                             $flat[$filename][$index][$kextra] = $vextra; // add the extra values as the given keys
                         }
                         $flat[$filename][$index][$k] = $v; // add the remaining key values
@@ -258,7 +319,7 @@ HT;
             } else if (is_object($v) || is_array($v)) {
                 //Get the parentId before pushing it to the stack
                 $object = $this->_helper->addObjectId($object); //add id to parent object if it doesn't exist
-                $parentId = $object->id;
+                $parentId = is_object($object) ? $object->id : null;
                 $fileObj = $this->createFileObj($k, $v, $prefix, $parentId, $extras);
                 $this->stackPush($fileObj);
             }
@@ -283,6 +344,8 @@ HT;
     /**
      * Check that json is valid before constructing
      * @throws \InvalidArgumentException
+     * 
+     * @param type $json - the json to validate, if it can't be decoded it's invalid
      */
     public function ensureValidJson($json)
     {
@@ -332,17 +395,16 @@ HT;
      * @param type $v - current value (Ex. list of items)
      * @param type $prefix - parent object key singularized (Ex. menu)
      * @param type $parentId - parent id if parent key is given (Ex. 1)
-     * @return type $extras 
+     * @param type $extras - for additional fields like id and __index
      */
     private function createFileObj($k, $v, $prefix = '', $parentId = '', $extras = [])
     {
         $delim = !empty($prefix) ? "_" : '';
         $parentIdKey = !empty($prefix) ? "${prefix}_id" : '';
-        if(!empty($parentIdKey)) {
+        if (!empty($parentIdKey)) {
             $extras[$parentIdKey] = $parentId;
         }
         $filename = $prefix . $delim . $this->inflector->singularize($k); //We create the new filename for the object as the outerobjects_object and the object name is in singular
         return [$filename, $k, $v, $extras]; //We'll push this to stack so we have both the actual objectname and the filename
     }
-
 }

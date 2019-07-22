@@ -1,0 +1,4 @@
+startup_id,__index,funded_day,funded_month,funded_year,raised_amount,raised_currency_code,round_code,source_description,source_url,id
+"52cdef7c4bab8bd675297d8a","0","1","10","2005","5250000","USD","a","","http://seattlepi.nwsource.com/business/246734_wiki02.html","418a7679-7d27-4338-bcf2-3c9a831d0f76"
+"52cdef7c4bab8bd675297d8a","1","1","1","2007","9500000","USD","b","","http://pulse2.com/2007/01/09/wiki-builder-website-wetpaint-welcomes-95m-funding/","f71d21af-e307-46d3-940b-e4011c1fbfea"
+"52cdef7c4bab8bd675297d8a","2","19","5","2008","25000000","USD","c","Accel","http://www.accel.com/news/news_one_up.php?news_id=185","9ddc971e-204b-4f21-b280-2e77f5bcff41"

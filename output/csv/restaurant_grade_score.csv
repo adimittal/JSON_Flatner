@@ -1,3 +1,2 @@
-id,__index,x,y
-"58b868503c6f4d322fa8f552","1","11","22"
-"58b868503c6f4d322fa8f552","0","1","2"
+restaurant_id,__index,restaurant_grade_id,x,y
+"58b868503c6f4d322fa8f552","0","0528c3ce-d92d-4619-9d9f-92340de1fecd","1","2"
